@@ -30,29 +30,31 @@ impl Processor {
         freeze_authority: COption<Pubkey>,
         rent_sysvar_account: bool,
     ) -> ProgramResult {
+        msg!("process initialize mint...");
         let account_info_iter = &mut accounts.iter();
         let mint_info = next_account_info(account_info_iter)?;
         let mint_data_len = mint_info.data_len();
-        let rent = if rent_sysvar_account {
-            Rent::from_account_info(next_account_info(account_info_iter)?)?
-        } else {
-            Rent::get()?
-        };
+        next_account_info(account_info_iter)?;
+        // let rent = if rent_sysvar_account {
+        //     Rent::from_account_info(next_account_info(account_info_iter)?)?
+        // } else {
+        //     Rent::get()?
+        // };
 
         let mut mint = Mint::unpack_unchecked(&mint_info.data.borrow())?;
         if mint.is_initialized {
             return Err(TokenError::AlreadyInUse.into());
         }
 
-        if !rent.is_exempt(mint_info.lamports(), mint_data_len) {
-            return Err(TokenError::NotRentExempt.into());
-        }
+        //if !rent.is_exempt(mint_info.lamports(), mint_data_len) {
+        //    return Err(TokenError::NotRentExempt.into());
+        //}
 
         mint.mint_authority = COption::Some(mint_authority);
         mint.decimals = decimals;
         mint.is_initialized = true;
         mint.freeze_authority = freeze_authority;
-
+        msg!("mint, mint_info.data_len() = {}", mint_info.data_len());
         Mint::pack(mint, &mut mint_info.data.borrow_mut())?;
 
         Ok(())
@@ -845,7 +847,7 @@ impl Processor {
                 mint_authority,
                 freeze_authority,
             } => {
-                msg!("Instruction: InitializeMint");
+                msg!("Instruction: InitializeMint [2]");
                 Self::process_initialize_mint(accounts, decimals, mint_authority, freeze_authority)
             }
             TokenInstruction::InitializeMint2 {
