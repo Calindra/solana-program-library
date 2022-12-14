@@ -85,6 +85,10 @@ fn process_create_associated_token_account(
         spl_token_program_id,
     );
     if associated_token_address != *associated_token_account_info.key {
+        msg!("mint = {:?}", spl_token_mint_info.key);
+        msg!("wallet address = {:?}", wallet_account_info.key);
+        msg!("associated_token_address = {:?}", associated_token_address);
+        msg!("associated_token_account_info.key = {:?}", associated_token_account_info.key);
         msg!("Error: Associated address does not match seed derivation");
         return Err(ProgramError::InvalidSeeds);
     }
