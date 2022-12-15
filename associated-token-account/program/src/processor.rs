@@ -15,7 +15,7 @@ use {
         program::{invoke, invoke_signed},
         program_error::ProgramError,
         pubkey::Pubkey,
-        rent::Rent,
+        //rent::Rent,
         system_program,
         sysvar::Sysvar,
     },
@@ -24,6 +24,7 @@ use {
         state::{Account, Mint},
     },
 };
+use cartesi_solana::anchor_lang::prelude::Rent;
 
 /// Specify when to create the associated token account
 #[derive(PartialEq)]
@@ -115,19 +116,20 @@ fn process_create_associated_token_account(
 
     let rent = Rent::get()?;
 
+    msg!("signer seeds data...");
     let associated_token_account_signer_seeds: &[&[_]] = &[
         &wallet_account_info.key.to_bytes(),
         &spl_token_program_id.to_bytes(),
         &spl_token_mint_info.key.to_bytes(),
         &[bump_seed],
     ];
-
+    msg!("get account len...");
     let account_len = get_account_len(
         spl_token_mint_info,
         spl_token_program_info,
         &[ExtensionType::ImmutableOwner],
     )?;
-
+    msg!("create_pda_account...");
     create_pda_account(
         funder_info,
         &rent,
