@@ -11,7 +11,7 @@ use {
         system_instruction,
         msg,
     },
-    spl_token_2022::extension::ExtensionType,
+    // spl_token_2022::extension::ExtensionType,
     std::convert::TryInto,
 };
 
@@ -80,13 +80,13 @@ pub fn create_pda_account<'a>(
 pub fn get_account_len<'a>(
     mint: &AccountInfo<'a>,
     spl_token_program: &AccountInfo<'a>,
-    extension_types: &[ExtensionType],
+    // extension_types: &[ExtensionType],
 ) -> Result<usize, ProgramError> {
     invoke(
-        &spl_token_2022::instruction::get_account_data_size(
+        &spl_token::instruction::get_account_data_size(
             spl_token_program.key,
             mint.key,
-            extension_types,
+            // extension_types,
         )?,
         &[mint.clone(), spl_token_program.clone()],
     )?;

@@ -114,7 +114,17 @@ fn process_create_associated_token_account(
         return Err(ProgramError::IllegalOwner);
     }
 
-    let rent = Rent::get()?;
+    let rent_result = Rent::get();
+
+    let rent = match rent_result {
+        Ok(rent) => {
+            rent
+        },
+        Err(e) => {
+            println!("Error: {:?}", e);
+            return Err(e)
+        }
+    };
 
     msg!("signer seeds data...");
     let associated_token_account_signer_seeds: &[&[_]] = &[
@@ -127,7 +137,7 @@ fn process_create_associated_token_account(
     let account_len = get_account_len(
         spl_token_mint_info,
         spl_token_program_info,
-        &[ExtensionType::ImmutableOwner],
+        // &[ExtensionType::ImmutableOwner],
     )?;
     msg!("create_pda_account...");
     create_pda_account(
