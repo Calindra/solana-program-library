@@ -9,6 +9,7 @@ use {
         pubkey::Pubkey,
         rent::Rent,
         system_instruction,
+        msg,
     },
     spl_token_2022::extension::ExtensionType,
     std::convert::TryInto,
@@ -31,6 +32,7 @@ pub fn create_pda_account<'a>(
             .saturating_sub(new_pda_account.lamports());
 
         if required_lamports > 0 {
+            msg!("Call invoke low level");
             invoke(
                 &system_instruction::transfer(payer.key, new_pda_account.key, required_lamports),
                 &[
@@ -39,8 +41,9 @@ pub fn create_pda_account<'a>(
                     system_program.clone(),
                 ],
             )?;
+            msg!("After invoke low level");
         }
-
+        msg!("Call invoke signed....");
         invoke_signed(
             &system_instruction::allocate(new_pda_account.key, space as u64),
             &[new_pda_account.clone(), system_program.clone()],
@@ -53,6 +56,7 @@ pub fn create_pda_account<'a>(
             &[new_pda_signer_seeds],
         )
     } else {
+        msg!("Call invoke signed [2]");
         invoke_signed(
             &system_instruction::create_account(
                 payer.key,
