@@ -6031,10 +6031,12 @@ name = "spl-associated-token-account"
 version = "1.0.5"
 dependencies = [
  "assert_matches",
+ "bincode",
  "borsh",
  "cartesi-solana",
  "num-derive",
  "num-traits",
+ "serde",
  "solana-program",
  "solana-program-test",
  "solana-sdk",
