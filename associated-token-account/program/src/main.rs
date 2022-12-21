@@ -1,4 +1,4 @@
-use cartesi_solana::adapter::{get_processor_args, persist_accounts};
+use cartesi_solana::{adapter::{get_processor_args, persist_accounts}, anchor_lang::{self, TIMESTAMP}};
 use serde::{Serialize, Deserialize};
 use solana_program::{
     account_info::AccountInfo,
@@ -83,6 +83,11 @@ impl SyscallStubs for CartesiStubs {
         child_stdin.write_all(&accounts_binary)?;
         child_stdin.write_all(b"\n")?;
         child_stdin.write_all(&signers_seeds)?;
+        child_stdin.write_all(b"\n")?;
+
+        unsafe {
+            child_stdin.write_all(TIMESTAMP.to_string().as_bytes())?;
+        }
         child_stdin.write_all(b"\n")?;
 
         drop(child_stdin);
