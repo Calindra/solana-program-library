@@ -28,7 +28,7 @@ fn execute_spawn(program_id: String) -> Child {
         .unwrap()
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Clone)]
 struct AccountInfoSerialize {
   pub key: Pubkey,
   pub is_signer: bool,
@@ -56,8 +56,7 @@ impl SyscallStubs for CartesiStubs {
         // );
         let mut child = execute_spawn(instruction.program_id.to_string());
         let child_stdin = child.stdin.as_mut().unwrap();
-        let encode = bincode::serialize(&instruction).unwrap();
-
+        let instruction = bincode::serialize(&instruction).unwrap();
 
         let accounts_encoded: Vec<AccountInfoSerialize> = account_infos.into_iter().map(
           |account| AccountInfoSerialize {
@@ -74,16 +73,16 @@ impl SyscallStubs for CartesiStubs {
 
         let accounts_binary = bincode::serialize(&accounts_encoded).unwrap();
 
-        let signers_seeds_binary = bincode::serialize(&signers_seeds).unwrap();
+        let signers_seeds = bincode::serialize(&signers_seeds).unwrap();
 
         child_stdin.write_all(b"Header: CPI")?;
         child_stdin.write_all(b"\n")?;
 
-        child_stdin.write_all(&encode)?;
+        child_stdin.write_all(&instruction)?;
         child_stdin.write_all(b"\n")?;
         child_stdin.write_all(&accounts_binary)?;
         child_stdin.write_all(b"\n")?;
-        child_stdin.write_all(&signers_seeds_binary)?;
+        child_stdin.write_all(&signers_seeds)?;
         child_stdin.write_all(b"\n")?;
 
         drop(child_stdin);
