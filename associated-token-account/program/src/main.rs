@@ -6,9 +6,10 @@ use cartesi_solana::{
 pub(crate) use std::io;
 
 fn main() -> io::Result<()> {
-    solana_program::program_stubs::set_syscall_stubs(Box::new(CartesiStubs {}));
-
     let (program_id, accounts, data, last_instruction) = get_processor_args();
+
+    solana_program::program_stubs::set_syscall_stubs(Box::new(CartesiStubs { program_id: program_id.clone() }));
+
     spl_associated_token_account::processor::process_instruction(&program_id, &accounts, &data)
         .unwrap();
 
