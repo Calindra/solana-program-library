@@ -103,7 +103,7 @@ impl Processor {
             Rent::from_account_info(next_account_info(account_info_iter)?)?
         } else {
             Rent::get()?
-        };
+        };        
 
         let mut account = Account::unpack_unchecked(&new_account_info.data.borrow())?;
         if account.is_initialized() {
@@ -429,6 +429,9 @@ impl Processor {
         let account_info = next_account_info(account_info_iter)?;
         let authority_info = next_account_info(account_info_iter)?;
 
+        println!("authority_info = {:?}", authority_info.key);
+        println!("account_info.key = {:?}; Mint::get_packed_len() = {}", account_info.key, Mint::get_packed_len());
+        println!("process_set_authority: account_info.data_len() = {}; Account::get_packed_len() = {}", account_info.data_len(), Account::get_packed_len());
         if account_info.data_len() == Account::get_packed_len() {
             let mut account = Account::unpack(&account_info.data.borrow())?;
 
