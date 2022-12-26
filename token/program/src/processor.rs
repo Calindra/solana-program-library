@@ -7,6 +7,7 @@ use crate::{
     state::{Account, AccountState, Mint, Multisig},
     try_ui_amount_into_amount,
 };
+use cartesi_solana::anchor_lang::prelude::Rent;
 use solana_program::{
     account_info::{next_account_info, AccountInfo},
     entrypoint::ProgramResult,
@@ -17,7 +18,7 @@ use solana_program::{
     program_option::COption,
     program_pack::{IsInitialized, Pack},
     pubkey::{Pubkey, PUBKEY_BYTES},
-    sysvar::{rent::Rent, Sysvar},
+    sysvar::{Sysvar},
 };
 
 /// Program state handler.
@@ -95,6 +96,9 @@ impl Processor {
             next_account_info(account_info_iter)?.key
         };
         let new_account_info_data_len = new_account_info.data_len();
+
+        println!("new_account_info_data_len = {}", new_account_info_data_len);
+
         let rent = if rent_sysvar_account {
             Rent::from_account_info(next_account_info(account_info_iter)?)?
         } else {
@@ -793,6 +797,9 @@ impl Processor {
     pub fn process_initialize_immutable_owner(accounts: &[AccountInfo]) -> ProgramResult {
         let account_info_iter = &mut accounts.iter();
         let token_account_info = next_account_info(account_info_iter)?;
+
+        println!("token_account_info {:?}", token_account_info);
+
         let account = Account::unpack_unchecked(&token_account_info.data.borrow())?;
         if account.is_initialized() {
             return Err(TokenError::AlreadyInUse.into());
@@ -1062,7 +1069,8 @@ mod tests {
 
         fn sol_get_rent_sysvar(&self, var_addr: *mut u8) -> u64 {
             unsafe {
-                *(var_addr as *mut _ as *mut Rent) = Rent::default();
+                // *(var_addr as *mut _ as *mut Rent) = Rent::default();
+                *(var_addr as *mut _ as *mut solana_program::rent::Rent) = Rent::default();
             }
             solana_program::entrypoint::SUCCESS
         }
