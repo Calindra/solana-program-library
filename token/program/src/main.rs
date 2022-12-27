@@ -7,6 +7,8 @@ fn main() -> io::Result<()> {
     solana_program::program_stubs::set_syscall_stubs(Box::new(CartesiStubs { program_id: program_id.clone() }));
 
     Processor::process(&program_id, &accounts, &data).unwrap();
+
+    println!("Persist spl token accounts...");
     persist_accounts(&accounts, last_instruction);
     Ok(())
 }

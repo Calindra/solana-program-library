@@ -13,6 +13,7 @@ fn main() -> io::Result<()> {
     spl_associated_token_account::processor::process_instruction(&program_id, &accounts, &data)
         .unwrap();
 
+    println!("Persist ATA accounts...");
     persist_accounts(&accounts, last_instruction);
     Ok(())
 }
