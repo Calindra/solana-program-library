@@ -1,5 +1,6 @@
 //! Program state processor
 
+use cartesi_solana::anchor_lang::prelude::Rent;
 use {
     crate::{
         error::AssociatedTokenAccountError,
@@ -17,14 +18,13 @@ use {
         pubkey::Pubkey,
         //rent::Rent,
         system_program,
-        sysvar::Sysvar,
+        //sysvar::Sysvar,
     },
     spl_token_2022::{
-        extension::{ExtensionType, StateWithExtensions},
+        extension::StateWithExtensions,
         state::{Account, Mint},
     },
 };
-use cartesi_solana::anchor_lang::prelude::Rent;
 
 /// Specify when to create the associated token account
 #[derive(PartialEq)]
@@ -89,7 +89,10 @@ fn process_create_associated_token_account(
         msg!("mint = {:?}", spl_token_mint_info.key);
         msg!("wallet address = {:?}", wallet_account_info.key);
         msg!("associated_token_address = {:?}", associated_token_address);
-        msg!("associated_token_account_info.key = {:?}", associated_token_account_info.key);
+        msg!(
+            "associated_token_account_info.key = {:?}",
+            associated_token_account_info.key
+        );
         msg!("Error: Associated address does not match seed derivation");
         return Err(ProgramError::InvalidSeeds);
     }
@@ -117,12 +120,10 @@ fn process_create_associated_token_account(
     let rent_result = Rent::get();
 
     let rent = match rent_result {
-        Ok(rent) => {
-            rent
-        },
+        Ok(rent) => rent,
         Err(e) => {
             println!("Error: {:?}", e);
-            return Err(e)
+            return Err(e);
         }
     };
 

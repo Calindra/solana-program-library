@@ -841,10 +841,14 @@ dependencies = [
  "anchor-spl",
  "base64 0.13.0",
  "bincode",
+ "borsh",
  "generic-array 0.14.6",
  "hex",
+ "lazy_static",
+ "once_cell",
  "serde",
  "serde_json",
+ "solana-sdk",
 ]
 
 [[package]]

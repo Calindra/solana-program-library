@@ -18,7 +18,6 @@ use solana_program::{
     program_option::COption,
     program_pack::{IsInitialized, Pack},
     pubkey::{Pubkey, PUBKEY_BYTES},
-    sysvar::{Sysvar},
 };
 
 /// Program state handler.
@@ -29,12 +28,12 @@ impl Processor {
         decimals: u8,
         mint_authority: Pubkey,
         freeze_authority: COption<Pubkey>,
-        rent_sysvar_account: bool,
+        _rent_sysvar_account: bool,
     ) -> ProgramResult {
         msg!("process initialize mint...");
         let account_info_iter = &mut accounts.iter();
         let mint_info = next_account_info(account_info_iter)?;
-        let mint_data_len = mint_info.data_len();
+        let _mint_data_len = mint_info.data_len();
         next_account_info(account_info_iter)?;
         // let rent = if rent_sysvar_account {
         //     Rent::from_account_info(next_account_info(account_info_iter)?)?
