@@ -1,6 +1,5 @@
 //! Program state processor
 
-use cartesi_solana::anchor_lang::prelude::Rent;
 use {
     crate::{
         error::AssociatedTokenAccountError,
@@ -16,9 +15,9 @@ use {
         program::{invoke, invoke_signed},
         program_error::ProgramError,
         pubkey::Pubkey,
-        //rent::Rent,
+        rent::Rent,
         system_program,
-        //sysvar::Sysvar,
+        sysvar::Sysvar,
     },
     spl_token_2022::{
         extension::StateWithExtensions,
