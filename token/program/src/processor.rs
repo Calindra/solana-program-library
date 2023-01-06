@@ -7,7 +7,6 @@ use crate::{
     state::{Account, AccountState, Mint, Multisig},
     try_ui_amount_into_amount,
 };
-use cartesi_solana::anchor_lang::prelude::Rent;
 use solana_program::{
     account_info::{next_account_info, AccountInfo},
     entrypoint::ProgramResult,
@@ -17,7 +16,7 @@ use solana_program::{
     program_memory::{sol_memcmp, sol_memset},
     program_option::COption,
     program_pack::{IsInitialized, Pack},
-    pubkey::{Pubkey, PUBKEY_BYTES},
+    pubkey::{Pubkey, PUBKEY_BYTES}, rent::Rent, sysvar::Sysvar,
 };
 
 /// Program state handler.
