@@ -20,7 +20,8 @@ num-traits = "0.2"
 num_enum = "0.5.4"
 solana-program = "1.10.33"
 thiserror = "1.0"
-cartesi-solana = { path = "../../../cartesi-solana" }
+# cartesi-solana = { path = "../../../cartesi-solana" }
+cartesi-solana = "0.3.0"
 
 [dev-dependencies]
 lazy_static = "1.4.0"
